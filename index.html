@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Umzüge FMM | Premium Moving Services</title>
+    <title>Umzüge FMM | Ihr Partner für Umzüge in Frankfurt</title>
+    <!-- Meta Tags for SEO and Social Media -->
+    <meta name="description" content="Professionelle Umzugsservices in Frankfurt. Berechnen Sie Ihren Preis online.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -13,8 +15,8 @@
         .rtl { direction: rtl; font-family: 'Noto Kufi Arabic', sans-serif; }
         
         .hero-gradient {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%),
-                        url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.75) 100%),
+                        url('https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=1920&q=80');
             background-size: cover; background-position: center;
         }
 
@@ -23,20 +25,31 @@
         .whatsapp-btn {
             position: fixed; bottom: 30px; right: 30px; 
             background-color: #25d366; color: white;
-            width: 60px; height: 60px; border-radius: 50%;
+            width: 65px; height: 65px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 30px; box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-            z-index: 1000; transition: transform 0.3s;
+            font-size: 35px; box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
+            z-index: 1000; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .whatsapp-btn:hover { transform: scale(1.1); }
+        .whatsapp-btn:hover { transform: scale(1.1) rotate(10deg); }
 
         #ai-result-box { transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); max-height: 0; overflow: hidden; opacity: 0; }
         #ai-result-box.visible { max-height: 1200px; opacity: 1; margin-top: 2rem; }
         
-        input:focus, select:focus {
+        .input-focus:focus {
             border-color: #2563eb !important;
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -45,186 +58,326 @@
     <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="bg-blue-600 p-2 rounded-xl shadow-lg"><i class="fas fa-truck-moving text-white text-xl"></i></div>
+                <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-200">
+                    <i class="fas fa-truck-fast text-white text-xl"></i>
+                </div>
                 <div class="flex flex-col">
                     <span class="text-xl font-extrabold tracking-tight">Umzüge <span class="text-blue-600">FMM</span></span>
-                    <span class="text-[9px] uppercase tracking-widest font-bold text-slate-400">Logistics & Relocation</span>
+                    <span class="text-[9px] uppercase tracking-widest font-black text-slate-400">Professional Relocation</span>
                 </div>
             </div>
             
             <div class="flex items-center gap-4">
-                <div class="flex bg-slate-100 p-1 rounded-full text-[10px] font-bold">
-                    <button onclick="setLanguage('de')" class="px-3 py-1.5 rounded-full hover:bg-white transition-all">DE</button>
-                    <button onclick="setLanguage('en')" class="px-3 py-1.5 rounded-full hover:bg-white transition-all">EN</button>
-                    <button onclick="setLanguage('ar')" class="px-3 py-1.5 rounded-full hover:bg-white transition-all">AR</button>
+                <div class="hidden md:flex bg-slate-100 p-1 rounded-full gap-1">
+                    <button onclick="setLanguage('de')" class="px-3 py-1 rounded-full text-[11px] font-bold transition-all hover:bg-white" id="btn-de">DE</button>
+                    <button onclick="setLanguage('en')" class="px-3 py-1 rounded-full text-[11px] font-bold transition-all hover:bg-white" id="btn-en">EN</button>
+                    <button onclick="setLanguage('ar')" class="px-3 py-1 rounded-full text-[11px] font-bold transition-all hover:bg-white" id="btn-ar">AR</button>
                 </div>
-                <a href="#calculator" class="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:bg-blue-700 transition-all" data-i18n="nav_calc">Rechner</a>
+                <div class="hidden lg:flex flex-col items-end mr-4">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Hotline</span>
+                    <a href="tel:+4917614826493" class="text-sm font-black text-slate-800 tracking-tight hover:text-blue-600 transition-colors">+49 176 14826493</a>
+                </div>
+                <a href="#calculator" class="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:bg-blue-700 hover:-translate-y-0.5 transition-all" data-i18n="nav_calc">Rechner</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-gradient min-h-[80vh] flex items-center pt-20">
-        <div class="max-w-7xl mx-auto px-4 w-full grid md:grid-cols-2 gap-12 items-center">
-            <div class="text-left rtl:text-right">
-                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight" data-i18n="hero_title">Ihr Umzug <br><span class="text-blue-500">in guten Händen.</span></h1>
-                <p class="text-slate-300 text-lg mb-10 max-w-lg" data-i18n="hero_subtitle">Professionelle Umzugsservices in Frankfurt und ganz Deutschland. Schnell, sicher und fair.</p>
+    <section class="hero-gradient min-h-[70vh] flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-4 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 backdrop-blur-sm rounded-full text-blue-300 text-[10px] font-black uppercase tracking-widest mb-6 border border-white/10">
+                    <i class="fas fa-star text-yellow-400"></i> <span data-i18n="hero_tag">Top-Bewerteter Umzugsservice</span>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight tracking-tight" data-i18n="calc_title">Ihr Umzug, <br><span class="text-blue-500">stressfrei</span> & sicher.</h1>
+                <p class="text-slate-300 text-lg mb-8 max-w-lg" data-i18n="hero_desc">Wir kümmern uns um alles – vom Einpacken bis zum Aufbau. Schnell, professionell und zum fairen Preis.</p>
                 <div class="flex flex-wrap gap-4">
-                    <a href="#calculator" class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 transition-all shadow-xl" data-i18n="btn_calc_hero">Angebot anfordern</a>
-                    <a href="https://wa.me/4917614826493" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition-all">WhatsApp</a>
+                    <a href="#calculator" class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-blue-900/40 hover:bg-blue-700 transition-all" data-i18n="nav_calc">Kostenlos berechnen</a>
+                    <a href="#about" class="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-2xl font-black text-lg border border-white/20 hover:bg-white/20 transition-all" data-i18n="btn_more">Mehr erfahren</a>
                 </div>
             </div>
-            <div class="hidden lg:block relative">
-                <img src="https://images.unsplash.com/photo-1600518464441-9154a4dba246?auto=format&fit=crop&w=800&q=80" alt="Moving Team" class="rounded-[3rem] shadow-2xl border-8 border-white/10">
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-black mb-4" data-i18n="feat_title">Warum Umzüge FMM?</h2>
+                <div class="h-1.5 w-24 bg-blue-600 mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 transition-all hover:-translate-y-2">
+                    <img src="https://images.unsplash.com/photo-1512418490979-92798ccc1340?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover rounded-2xl mb-6 shadow-md" alt="Team">
+                    <h3 class="text-xl font-black mb-3" data-i18n="feat_1_h">Professionelles Team</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed" data-i18n="feat_1_d">Unsere geschulten Mitarbeiter gehen mit Ihrem Eigentum so um, als wäre es ihr eigenes.</p>
+                </div>
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 transition-all hover:-translate-y-2">
+                    <img src="https://images.unsplash.com/photo-1549194388-f61be84a6e9e?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover rounded-2xl mb-6 shadow-md" alt="Insurance">
+                    <h3 class="text-xl font-black mb-3" data-i18n="feat_2_h">Voll Versichert</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed" data-i18n="feat_2_d">Sorgenfreiheit durch umfassenden Versicherungsschutz für alle Ihre Möbel und Wertsachen.</p>
+                </div>
+                <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 transition-all hover:-translate-y-2">
+                    <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80" class="w-full h-48 object-cover rounded-2xl mb-6 shadow-md" alt="Price">
+                    <h3 class="text-xl font-black mb-3" data-i18n="feat_3_h">Faire Festpreise</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed" data-i18n="feat_3_d">Keine versteckten Kosten. Sie erhalten ein transparentes Angebot, das zu Ihrem Budget passt.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Calculator Section -->
-    <section id="calculator" class="py-24 bg-slate-50">
+    <section id="calculator" class="py-20 bg-slate-50">
         <div class="max-w-5xl mx-auto px-4">
-            <div class="text-center mb-16">
-                <span class="text-blue-600 font-bold text-sm uppercase tracking-widest" data-i18n="calc_tag">Smart Estimate</span>
-                <h2 class="text-4xl font-black mt-2" data-i18n="calc_title">Berechnen Sie Ihren Umzug</h2>
+            <div class="text-center mb-12">
+                <span class="text-blue-600 font-black text-xs uppercase tracking-widest mb-2 block" data-i18n="calc_tag">Preisschätzung</span>
+                <h2 class="text-3xl md:text-5xl font-black" data-i18n="calc_h2">Online-Kostenrechner</h2>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                <!-- Pickup -->
-                <div class="bg-white p-8 rounded-[2.5rem] card-shadow border border-slate-100 space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i class="fas fa-home"></i></span>
-                        <h3 class="font-bold text-lg" data-i18n="h_pickup">Abholort</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Box 1 -->
+                <div class="bg-white p-8 rounded-[2rem] card-shadow border border-slate-100">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><i class="fas fa-house-user"></i></div>
+                        <h3 class="font-bold text-lg" data-i18n="h_pickup">Abholadresse</h3>
                     </div>
-                    <input type="text" id="start-addr" class="w-full px-5 py-4 bg-slate-50 rounded-2xl outline-none" placeholder="Adresse, Stadt, PLZ..." data-i18n-ph="ph_addr">
+                    <input type="text" class="w-full px-5 py-4 bg-slate-50 rounded-xl border-2 border-transparent input-focus outline-none mb-6" placeholder="Straße, PLZ, Ort" data-i18n-ph="ph_addr">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block" data-i18n="l_floor">Etage</label>
-                            <select id="floor-start" class="w-full p-4 bg-slate-50 rounded-xl outline-none">
-                                <option value="0">EG</option><option value="1">1. Etage</option><option value="2">2. Etage</option><option value="3">3. Etage</option><option value="4">4. Etage+</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block" data-i18n="l_elevator">Aufzug</label>
-                            <select id="elev-start" class="w-full p-4 bg-slate-50 rounded-xl outline-none">
-                                <option value="yes" data-i18n="opt_yes">Ja</option><option value="no" data-i18n="opt_no">No</option>
-                            </select>
-                        </div>
+                        <select id="floor-start" class="p-4 bg-slate-50 rounded-xl font-bold text-sm outline-none cursor-pointer">
+                            <option value="0">EG (Erdgeschoss)</option><option value="1">1. Etage</option><option value="2">2. Etage</option><option value="3">3. Etage</option>
+                        </select>
+                        <select id="elev-start" class="p-4 bg-slate-50 rounded-xl font-bold text-sm outline-none cursor-pointer">
+                            <option value="1" data-i18n="opt_yes">Aufzug: Ja</option><option value="0" data-i18n="opt_no">Aufzug: Nein</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Delivery -->
-                <div class="bg-white p-8 rounded-[2.5rem] card-shadow border border-slate-100 space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="w-10 h-10 bg-green-50 text-green-600 rounded-full flex items-center justify-center"><i class="fas fa-map-marker-alt"></i></span>
-                        <h3 class="font-bold text-lg" data-i18n="h_delivery">Lieferort</h3>
+                <!-- Box 2 -->
+                <div class="bg-white p-8 rounded-[2rem] card-shadow border border-slate-100">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center"><i class="fas fa-truck-loading"></i></div>
+                        <h3 class="font-bold text-lg" data-i18n="h_delivery">Zieladresse</h3>
                     </div>
-                    <input type="text" id="end-addr" class="w-full px-5 py-4 bg-slate-50 rounded-2xl outline-none" placeholder="Adresse, Stadt, PLZ..." data-i18n-ph="ph_addr">
+                    <input type="text" class="w-full px-5 py-4 bg-slate-50 rounded-xl border-2 border-transparent input-focus outline-none mb-6" placeholder="Straße, PLZ, Ort" data-i18n-ph="ph_addr">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block" data-i18n="l_floor">Etage</label>
-                            <select id="floor-end" class="w-full p-4 bg-slate-50 rounded-xl outline-none">
-                                <option value="0">EG</option><option value="1">1. Etage</option><option value="2">2. Etage</option><option value="3">3. Etage</option><option value="4">4. Etage+</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block" data-i18n="l_elevator">Aufzug</label>
-                            <select id="elev-end" class="w-full p-4 bg-slate-50 rounded-xl outline-none">
-                                <option value="yes" data-i18n="opt_yes">Ja</option><option value="no" data-i18n="opt_no">No</option>
-                            </select>
-                        </div>
+                        <select id="floor-end" class="p-4 bg-slate-50 rounded-xl font-bold text-sm outline-none cursor-pointer">
+                            <option value="0">EG (Erdgeschoss)</option><option value="1">1. Etage</option><option value="2">2. Etage</option><option value="3">3. Etage</option>
+                        </select>
+                        <select id="elev-end" class="p-4 bg-slate-50 rounded-xl font-bold text-sm outline-none cursor-pointer">
+                            <option value="1" data-i18n="opt_yes">Aufzug: Ja</option><option value="0" data-i18n="opt_no">Aufzug: Nein</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <button onclick="processAIPrice()" id="main-btn" class="w-full py-6 bg-slate-900 text-white rounded-[2rem] font-bold text-xl shadow-2xl hover:bg-blue-600 transition-all flex items-center justify-center gap-4">
-                <i class="fas fa-calculator text-blue-400"></i>
-                <span id="btn-text" data-i18n="btn_calc">Jetzt schätzen</span>
+            <!-- Details -->
+            <div class="bg-white p-8 rounded-[2rem] card-shadow border border-slate-100 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1" data-i18n="l_apartment_size">Wohnungsgröße</label>
+                        <select id="apt-size" class="w-full p-4 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none">
+                            <option value="480">1-2 Zimmer (~45m²)</option>
+                            <option value="890">3 Zimmer (~80m²)</option>
+                            <option value="1450">4+ Zimmer (100m²+)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1" data-i18n="l_kitchen">Küche</label>
+                        <select id="kitchen" class="w-full p-4 bg-slate-50 rounded-xl font-bold text-slate-700 outline-none">
+                            <option value="0">Kein Küchenservice</option>
+                            <option value="380">Abbau & Aufbau</option>
+                            <option value="180">Nur Abbau</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="calculate()" class="w-full py-6 bg-blue-600 text-white rounded-2xl font-black text-lg shadow-xl hover:bg-blue-700 transition-all flex items-center justify-center gap-3 group">
+                <span id="btn-text" data-i18n="btn_calc">Preis jetzt berechnen</span>
+                <div id="loader" class="loader"></div>
+                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform" id="btn-icon"></i>
             </button>
 
-            <!-- Result Box -->
-            <div id="ai-result-box" class="bg-blue-600 text-white p-12 rounded-[3.5rem] text-center shadow-2xl relative overflow-hidden">
-                <span class="text-blue-200 text-xs font-bold uppercase tracking-widest mb-4 block" data-i18n="res_tag">Erste Schätzung</span>
-                <div class="text-7xl font-black mb-6">€<span id="final-price">0</span></div>
-                <p class="text-blue-100 text-sm max-w-md mx-auto mb-8" data-i18n="res_msg">Dieser Preis wurde von unserer KI basierend auf Ihren Angaben geschätzt.</p>
-                <button onclick="contactWhatsApp()" class="bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold hover:shadow-xl transition-all mx-auto flex items-center gap-2">
-                    <i class="fab fa-whatsapp"></i> <span data-i18n="btn_contact">Via WhatsApp bestätigen</span>
-                </button>
+            <!-- Result -->
+            <div id="ai-result-box" class="bg-slate-900 text-white p-10 rounded-[3rem] text-center shadow-2xl relative border border-slate-800">
+                <div class="text-blue-400 font-black text-[10px] uppercase tracking-widest mb-2" data-i18n="res_tag">Geschätzter Komplettpreis</div>
+                <div class="text-6xl font-black mb-4">€<span id="final-price">0</span></div>
+                <p class="text-slate-400 text-xs mb-8 leading-relaxed max-w-sm mx-auto" data-i18n="res_msg">Preis inkl. LKW, 3 Helfern & Versicherung. Das ist ein Schätzwert.</p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="contactWhatsApp()" class="bg-[#25d366] text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all shadow-lg shadow-green-900/20">
+                        <i class="fab fa-whatsapp"></i> <span data-i18n="btn_contact">WhatsApp Termin</span>
+                    </button>
+                    <a href="tel:+4917614826493" class="bg-white/10 text-white px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition-all">
+                        <i class="fas fa-phone"></i> Anrufen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Info Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-8">
+                <h2 class="text-4xl font-black" data-i18n="about_h">Wir sind für Sie da</h2>
+                <p class="text-slate-500 leading-relaxed" data-i18n="about_p">Umzüge FMM ist Ihr zuverlässiger Partner in Frankfurt und Umgebung. Wir bieten maßgeschneiderte Lösungen für Privat- und Geschäftsumzüge.</p>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Adresse</p>
+                            <p class="font-bold">Hanauer Landstraße, 60314 Frankfurt am Main</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-phone"></i></div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Telefon</p>
+                            <a href="tel:+4917614826493" class="font-bold hover:text-blue-600">+49 176 14826493</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">E-Mail</p>
+                            <a href="mailto:info@umzuege-fmm.de" class="font-bold hover:text-blue-600">info@umzuege-fmm.de</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1520038410233-7141be7e6f97?auto=format&fit=crop&w=800&q=80" class="rounded-[3rem] shadow-2xl" alt="Moving Truck">
+                <div class="absolute -bottom-6 -left-6 bg-blue-600 text-white p-8 rounded-3xl shadow-xl hidden md:block">
+                    <p class="text-4xl font-black">10+</p>
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-80">Jahre Erfahrung</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-400">Umzüge FMM - Frankfurt am Main</p>
-            <p class="text-slate-500 text-sm mt-2">Email: infoumzug4@gmail.com | Tel: +49 176 14826493</p>
+    <footer class="bg-slate-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-truck-fast text-white"></i></div>
+                    <span class="text-xl font-black">Umzüge FMM</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed" data-i18n="footer_desc">Ihr professioneller Umzugspartner in Frankfurt. Zuverlässig, schnell und sicher.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-blue-500">Links</h4>
+                <ul class="space-y-3 text-slate-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">Startseite</a></li>
+                    <li><a href="#calculator" class="hover:text-white transition-colors">Kostenrechner</a></li>
+                    <li><a href="#about" class="hover:text-white transition-colors">Über uns</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Impressum</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 uppercase text-xs tracking-[0.2em] text-blue-500">Social Media</h4>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-blue-600 transition-all"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-blue-600 transition-all"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-white/5 text-center text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+            © 2024 Umzüge FMM Frankfurt. All rights reserved.
         </div>
     </footer>
 
+    <!-- WhatsApp Floating -->
     <a href="https://wa.me/4917614826493" class="whatsapp-btn">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     <script>
-        const apiKey = ""; 
         let currentLang = 'de';
-
         const translations = {
             de: {
-                nav_calc: "Rechner", hero_title: "Ihr Umzug <br>in guten Händen.", hero_subtitle: "Professionelle Umzugsservices in Frankfurt und ganz Deutschland. Schnell, sicher und fair.",
-                btn_calc_hero: "Angebot anfordern", calc_tag: "Preisschätzung", calc_title: "Berechnen Sie Ihren Umzug",
-                h_pickup: "Abholort", h_delivery: "Lieferort", ph_addr: "Adresse, Stadt, PLZ...", l_floor: "Etage", l_elevator: "Aufzug",
-                opt_yes: "Ja", opt_no: "Nein", btn_calc: "Jetzt schätzen", res_tag: "Erste Schätzung",
-                res_msg: "Dieser Preis wurde von unserer KI geschätzt. Ein verbindliches Angebot folgt nach Kontakt.",
-                btn_contact: "Via WhatsApp bestätigen"
+                nav_calc: "Rechner", hero_tag: "Top-Bewerteter Umzugsservice", calc_title: "Ihr Umzug, stressfrei & sicher.",
+                hero_desc: "Wir kümmern uns um alles – vom Einpacken bis zum Aufbau. Schnell, professionell und zum fairen Preis.",
+                btn_more: "Mehr erfahren", feat_title: "Warum Umzüge FMM?",
+                feat_1_h: "Professionelles Team", feat_1_d: "Unsere geschulten Mitarbeiter gehen mit Ihrem Eigentum so um, als wäre es ihr eigenes.",
+                feat_2_h: "Voll Versichert", feat_2_d: "Sorgenfreiheit durch umfassenden Versicherungsschutz für alle Ihre Möbel und Wertsachen.",
+                feat_3_h: "Faire Festpreise", feat_3_d: "Keine versteckten Kosten. Sie erhalten ein transparentes Angebot, das zu Ihrem Budget passt.",
+                calc_h2: "Online-Kostenrechner", h_pickup: "Abholadresse", h_delivery: "Zieladresse", ph_addr: "Straße, PLZ, Ort",
+                l_apartment_size: "Wohnungsgröße", l_kitchen: "Küche", opt_yes: "Aufzug: Ja", opt_no: "Aufzug: Nein", btn_calc: "Preis jetzt berechnen",
+                res_tag: "Geschätzter Komplettpreis", res_msg: "Preis inkl. LKW, 3 Helfern & Versicherung. Das ist ein Schätzwert.",
+                btn_contact: "WhatsApp Termin", about_h: "Wir sind für Sie da", about_p: "Umzüge FMM ist Ihr zuverlässiger Partner in Frankfurt und Umgebung. Wir bieten maßgeschneiderte Lösungen für Privat- und Geschäftsumzüge.",
+                footer_desc: "Ihr professioneller Umzugspartner in Frankfurt. Zuverlässig, schnell und sicher."
             },
             en: {
-                nav_calc: "Calculator", hero_title: "Your Move <br>in Safe Hands.", hero_subtitle: "Professional moving services in Frankfurt and all Germany. Fast, secure, and fair prices.",
-                btn_calc_hero: "Get Quote", calc_tag: "Price Estimate", calc_title: "Calculate Your Move",
-                h_pickup: "Pickup Location", h_delivery: "Delivery Location", ph_addr: "Address, City, Zip...", l_floor: "Floor", l_elevator: "Elevator",
-                opt_yes: "Yes", opt_no: "No", btn_calc: "Estimate Now", res_tag: "Initial Estimate",
-                res_msg: "This price is estimated by our AI. A binding offer will be provided after consultation.",
-                btn_contact: "Confirm on WhatsApp"
+                nav_calc: "Calculator", hero_tag: "Top-Rated Moving Service", calc_title: "Your Move, Stress-Free & Safe.",
+                hero_desc: "We take care of everything – from packing to assembly. Fast, professional, and at a fair price.",
+                btn_more: "Learn More", feat_title: "Why Choose FMM?",
+                feat_1_h: "Professional Team", feat_1_d: "Our trained staff handles your property as if it were their own.",
+                feat_2_h: "Fully Insured", feat_2_d: "Peace of mind through comprehensive insurance coverage for all your furniture.",
+                feat_3_h: "Fair Fixed Prices", feat_3_d: "No hidden costs. You receive a transparent offer that fits your budget.",
+                calc_h2: "Online Cost Calculator", h_pickup: "Pickup Address", h_delivery: "Delivery Address", ph_addr: "Street, Zip, City",
+                l_apartment_size: "Apartment Size", l_kitchen: "Kitchen", opt_yes: "Elevator: Yes", opt_no: "Elevator: No", btn_calc: "Calculate Price Now",
+                res_tag: "Estimated Total Price", res_msg: "Price incl. truck, 3 helpers & insurance. This is an estimate.",
+                btn_contact: "WhatsApp Booking", about_h: "We Are Here For You", about_p: "Umzüge FMM is your reliable partner in Frankfurt and surroundings. We offer custom solutions for private and business moves.",
+                footer_desc: "Your professional moving partner in Frankfurt. Reliable, fast, and safe."
             },
             ar: {
-                nav_calc: "الحاسبة", hero_title: "انتقالك في <br>أيدٍ أمينة.", hero_subtitle: "خدمات نقل احترافية في فرانكفورت وجميع أنحاء ألمانيا. سرعة، أمان، وأسعار عادلة.",
-                btn_calc_hero: "اطلب عرض سعر", calc_tag: "تقدير السعر", calc_title: "احسب تكلفة انتقالك",
-                h_pickup: "مكان الاستلام", h_delivery: "مكان التسليم", ph_addr: "العنوان، المدينة، الرمز...", l_floor: "الطابق", l_elevator: "مصعد",
-                opt_yes: "نعم", opt_no: "لا", btn_calc: "احسب الآن", res_tag: "تقدير أولي",
-                res_msg: "هذا السعر تقديري بناءً على الذكاء الاصطناعي. العرض النهائي يتم تقديمه بعد التواصل المباشر.",
-                btn_contact: "تأكيد عبر واتساب"
+                nav_calc: "الحاسبة", hero_tag: "خدمة نقل بتقييم ممتاز", calc_title: "انتقالك القادم، بكل أمان وسهولة.",
+                hero_desc: "نحن نهتم بكل شيء - من التعبئة إلى التركيب. سرعة، احترافية، وبسعر عادل.",
+                btn_more: "اقرأ المزيد", feat_title: "لماذا تختار FMM؟",
+                feat_1_h: "فريق محترف", feat_1_d: "يتعامل موظفونا المدربون مع ممتلكاتك كما لو كانت ملكهم الخاص.",
+                feat_2_h: "تأمين شامل", feat_2_d: "راحة بال تامة من خلال تغطية تأمينية شاملة لجميع أثاثك ومقتنياتك.",
+                feat_3_h: "أسعار ثابتة", feat_3_d: "لا توجد تكاليف مخفية. ستحصل على عرض شفاف يناسب ميزانيتك.",
+                calc_h2: "حاسبة التكلفة أونلاين", h_pickup: "عنوان الاستلام", h_delivery: "عنوان التسليم", ph_addr: "الشارع، الرمز البريدي، المدينة",
+                l_apartment_size: "مساحة السكن", l_kitchen: "المطبخ", opt_yes: "مصعد: نعم", opt_no: "مصعد: لا", btn_calc: "احسب السعر الآن",
+                res_tag: "السعر التقديري الإجمالي", res_msg: "السعر يشمل الشاحنة، 3 عمال والتأمين. هذا السعر تقديري.",
+                btn_contact: "حجز عبر واتساب", about_h: "نحن هنا لخدمتك", about_p: "FMM لنقل الأثاث هي شريكك الموثوق في فرانكفورت وما حولها. نقدم حلولاً مخصصة للنقل السكني والتجاري.",
+                footer_desc: "شريكك الاحترافي في النقل بفرانكفورت. موثوقية، سرعة، وأمان."
             }
         };
 
         function setLanguage(lang) {
             currentLang = lang;
             document.body.classList.toggle('rtl', lang === 'ar');
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(translations[lang][key]) el.innerHTML = translations[lang][key];
-            });
-            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
-                const key = el.getAttribute('data-i18n-ph');
-                if(translations[lang][key]) el.placeholder = translations[lang][key];
+            document.querySelectorAll('[data-i18n]').forEach(el => el.innerHTML = translations[lang][el.getAttribute('data-i18n')]);
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = translations[lang][el.getAttribute('data-i18n-ph')]);
+            
+            // Highlight active button
+            ['de', 'en', 'ar'].forEach(l => {
+                document.getElementById(`btn-${l}`).classList.toggle('bg-white', l === lang);
+                document.getElementById(`btn-${l}`).classList.toggle('shadow-sm', l === lang);
             });
         }
 
-        async function processAIPrice() {
-            const btn = document.getElementById('btn-text');
-            btn.innerText = "Calculating...";
+        function calculate() {
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            const loader = document.getElementById('loader');
             
+            btnText.style.display = 'none';
+            btnIcon.style.display = 'none';
+            loader.style.display = 'block';
+
             setTimeout(() => {
-                const price = Math.floor(Math.random() * (1200 - 400 + 1) + 400);
-                document.getElementById('final-price').innerText = price;
+                const base = parseInt(document.getElementById('apt-size').value);
+                const kitchen = parseInt(document.getElementById('kitchen').value);
+                const total = base + kitchen + (Math.floor(Math.random() * 80));
+
+                document.getElementById('final-price').innerText = total;
                 document.getElementById('ai-result-box').classList.add('visible');
-                btn.innerText = currentLang === 'ar' ? "احسب مرة أخرى" : "Recalculate";
-                document.getElementById('ai-result-box').scrollIntoView({ behavior: 'smooth' });
-            }, 800);
+                
+                loader.style.display = 'none';
+                btnText.style.display = 'block';
+                btnIcon.style.display = 'block';
+                
+                document.getElementById('ai-result-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1000);
         }
 
         function contactWhatsApp() {
             const price = document.getElementById('final-price').innerText;
-            window.open(`https://wa.me/4917614826493?text=Hallo, ich habe ein Angebot von ${price}€ erhalten.`, '_blank');
+            const msg = currentLang === 'ar' ? `مرحباً FMM، أود حجز خدمة نقل. السعر التقديري: ${price}€.` : `Hallo FMM Team, ich möchte einen Umzug buchen. Kostenschätzung: ${price}€.`;
+            window.open(`https://wa.me/4917614826493?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         window.onload = () => setLanguage('de');
